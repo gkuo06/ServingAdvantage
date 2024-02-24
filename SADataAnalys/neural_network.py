@@ -12,8 +12,7 @@ from tensorflow.keras import layers
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.datasets import mnist
 
-physical_devices = tf.config.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
 
 zip_file_path = '/mnt/c/Users/garok/Downloads/archive.zip'
 csv_file_name = "training.1600000.processed.noemoticon.csv"
