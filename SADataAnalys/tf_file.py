@@ -3,7 +3,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 import tensorflow as tf
 
-'''
+
 print(tf.__version__)
 print("HELLO DOES THIS WORK")
 '''
@@ -58,3 +58,4 @@ z = tf.tensordot(x, y, axes=1) # Dot product
 print(z)
 
 # Indexing
+'''
