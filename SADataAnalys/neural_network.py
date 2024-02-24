@@ -10,9 +10,8 @@ import tensorflow as tf
 from tensorflow import keras # Keras is a high-level API for TensorFlow that helps us build and train deep learning models
 from tensorflow.keras import layers
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.datasets import mnist
-
-
+from tensorflow.keras.datasets import mnist # Neural network testing
+from tensorflow.keras.models import Sequential, load_model
 
 zip_file_path = '/mnt/c/Users/garok/Downloads/archive.zip'
 csv_file_name = "training.1600000.processed.noemoticon.csv"
@@ -25,3 +24,8 @@ train_data, test_data = train_test_split(df, test_size=0.2, random_state=42)
 
 print(f"Test Data Head:\n{test_data.head()}",end="\n\n")
 print(f"Train Data Head:\n{train_data.head()}")
+
+sentiment_analysis_model = Sequential()
+
+# Add conditions and other funny haha stuff here 
+sentiment_analysis_model.add(Dense())
