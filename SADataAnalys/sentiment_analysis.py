@@ -27,7 +27,7 @@ csv_file_name = 'training.1600000.processed.noemoticon.csv'
 with zipfile.ZipFile(zip_file_path) as z:
     with z.open(csv_file_name) as csv_file:
         df = pd.read_csv(csv_file, dtype=str, header=None, encoding='ISO-8859-1')
-        labels = df[0].astype(float) #First column of csv
+        labels = df[0].replace('4','1').astype(float) #First column of csv
         texts = df[5].astype(str) #Sixth column of csv
 
 #Test size of 20% of the entire dataset
@@ -87,7 +87,7 @@ sentiment_analysis_model.add(Dense(1, activation="sigmoid"))
 sentiment_analysis_model.compile(optimizer='sgd', loss='binary_crossentropy', metrics=['accuracy'])
 
 #Model training
-sentiment_analysis_model.fit(train_sequences_padded, train_label, epochs=5, 
+sentiment_analysis_model.fit(train_sequences_padded, train_label, epochs=16, 
                              batch_size=32, validation_data=(test_sequences_padded, test_label))
 
 loss, accuracy = sentiment_analysis_model.evaluate(test_sequences_padded, test_label)
