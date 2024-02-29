@@ -12,7 +12,7 @@ from tensorflow import keras #Keras is a high-level API for TensorFlow that help
 from tensorflow.keras import layers
 from tensorflow.keras.layers import Dense, Embedding, GlobalAveragePooling1D, Dropout, LSTM
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.optimizers import Adam
+#from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
@@ -27,11 +27,11 @@ csv_file_name = 'training.1600000.processed.noemoticon.csv'
 with zipfile.ZipFile(zip_file_path) as z:
     with z.open(csv_file_name) as csv_file:
         df = pd.read_csv(csv_file, dtype=str, header=None, encoding='ISO-8859-1')
-        labels = df[0].astype(int) #First column of csv
+        labels = df[0].astype(float) #First column of csv
         texts = df[5].astype(str) #Sixth column of csv
 
 #Test size of 20% of the entire dataset
-train_text, test_text, train_label, test_label = train_test_split(texts, labels, test_size=0.2, random_state=42)
+train_text, test_text, train_label, test_label = train_test_split(texts, labels, test_size=0.2, random_state=42, shuffle=True)
 
 #Set words to tokens
 vocab_size = 500000
@@ -69,21 +69,22 @@ sentiment_analysis_model.add(GlobalAveragePooling1D()) # Averages all embeddings
 #Layers
 #256 -> 128 -> 64 -> 32 -> 16 -> 1 (output)
 #Currently in testing phase WILL BE CHANGED
-sentiment_analysis_model.add(Dense(1024, activation="relu"))
-sentiment_analysis_model.add(Dense(512, activation="relu"))
-sentiment_analysis_model.add(Dense(256, activation="relu"))
-sentiment_analysis_model.add(Dense(128, activation="relu"))
-sentiment_analysis_model.add(Dense(64, activation="relu"))
-sentiment_analysis_model.add(Dense(32, activation="relu"))
-sentiment_analysis_model.add(Dense(16, activation="relu"))
-sentiment_analysis_model.add(Dense(8, activation="relu"))
-sentiment_analysis_model.add(Dense(4, activation="relu"))
-sentiment_analysis_model.add(Dense(2, activation="relu"))
+sentiment_analysis_model.add(Dense(units=2048, activation="relu"))
+sentiment_analysis_model.add(Dense(units=1024, activation="relu"))
+sentiment_analysis_model.add(Dense(units=512, activation="relu"))
+sentiment_analysis_model.add(Dense(units=256, activation="relu"))
+sentiment_analysis_model.add(Dense(units=128, activation="relu"))
+sentiment_analysis_model.add(Dense(units=64, activation="relu"))
+sentiment_analysis_model.add(Dense(units=32, activation="relu"))
+sentiment_analysis_model.add(Dense(units=16, activation="relu"))
+sentiment_analysis_model.add(Dense(units=8, activation="relu"))
+sentiment_analysis_model.add(Dense(units=4, activation="relu"))
+sentiment_analysis_model.add(Dense(units=2, activation="relu"))
 
 #Final output
 sentiment_analysis_model.add(Dense(1, activation="sigmoid"))
 
-sentiment_analysis_model.compile(optimizer=Adam(), loss='binary_crossentropy', metrics=['accuracy'])
+sentiment_analysis_model.compile(optimizer='sgd', loss='binary_crossentropy', metrics=['accuracy'])
 
 #Model training
 sentiment_analysis_model.fit(train_sequences_padded, train_label, epochs=5, 
