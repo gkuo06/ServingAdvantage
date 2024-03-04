@@ -46,7 +46,7 @@ with zipfile.ZipFile(zip_file_path) as z:
         stop_words = set(stopwords.words('english'))
         texts = texts.apply(lambda x: ' '.join([word for word in x.split() if word.lower() not in stop_words]))
 
-        #Lemmatization of text
+        #Lemmatization
         nltk.download('wordnet')
         lemmatizer = WordNetLemmatizer()
         texts = texts.apply(lambda x: ' '.join([lemmatizer.lemmatize(word) for word in x.split()]))
