@@ -49,7 +49,7 @@ with zipfile.ZipFile(zip_file_path) as z:
         #Lemmatization of text
         nltk.download('wordnet')
         lemmatizer = WordNetLemmatizer()
-        texts = texts.apply(lambda x: ''.join([lemmatizer.lemmatize(word) for word in x.split()]))
+        texts = texts.apply(lambda x: ' '.join([lemmatizer.lemmatize(word) for word in x.split()]))
 
 
 
@@ -57,10 +57,9 @@ with zipfile.ZipFile(zip_file_path) as z:
 train_text, test_text, train_label, test_label = train_test_split(texts, labels, test_size=0.2, random_state=42, shuffle=True)
 
 #Set words to tokens
-vocab_size = 500000
+vocab_size = 75000
 tokenizer = Tokenizer(num_words=vocab_size, lower=True, oov_token='8==D')
 tokenizer.fit_on_texts(train_text)
-tokenizer.fit_on_texts(test_text)
 
 #String sequences into tokenized lists
 train_sequences = tokenizer.texts_to_sequences(train_text)
@@ -91,31 +90,25 @@ sentiment_analysis_model.add(Embedding(vocab_size, embeddings, input_length=max_
 sentiment_analysis_model.add(GlobalAveragePooling1D()) # Averages all embeddings in a sequence
 
 #Layers
-#256 -> 128 -> 64 -> 32 -> 16 -> 1 (output)
-#Currently in testing phase WILL BE CHANGED
 sentiment_analysis_model.add(Dense(units=2, activation="tanh", 
                                    input_shape=(train_sequences_padded.shape[1:])))
-for i in range(10):
-    sentiment_analysis_model.add(Dense(units=2048, activation="relu"))
-sentiment_analysis_model.add(Dense(units=1024, activation="relu"))
-sentiment_analysis_model.add(Dense(units=512, activation="relu"))
-sentiment_analysis_model.add(Dense(units=256, activation="relu"))
-sentiment_analysis_model.add(Dense(units=128, activation="relu"))
 sentiment_analysis_model.add(Dense(units=64, activation="relu"))
 sentiment_analysis_model.add(Dense(units=32, activation="relu"))
 sentiment_analysis_model.add(Dense(units=16, activation="relu"))
-sentiment_analysis_model.add(Dense(units=8, activation="relu"))
-sentiment_analysis_model.add(Dense(units=4, activation="relu"))
-sentiment_analysis_model.add(Dense(units=2, activation="relu"))
 
 #Final output
 sentiment_analysis_model.add(Dense(1, activation="sigmoid"))
 
-sentiment_analysis_model.compile(optimizer='sgd', loss='binary_crossentropy', metrics=['accuracy'])
+#Compile model
+sentiment_analysis_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 #Model training
-sentiment_analysis_model.fit(train_sequences_padded, train_label, epochs=8, 
-                             batch_size=32, validation_data=(test_sequences_padded, test_label))
+sentiment_analysis_model.fit(train_sequences_padded, train_label, epochs=3, 
+                             batch_size=512, validation_data=(test_sequences_padded, test_label))
 
+#Save model
+#sentiment_analysis_model.save('/mnt/c/Users/garok/Downloads/sentiment_analysis_model')
+
+#Accuracy check
 loss, accuracy = sentiment_analysis_model.evaluate(test_sequences_padded, test_label)
 print(f"Accuracy score: {accuracy*100}%")
