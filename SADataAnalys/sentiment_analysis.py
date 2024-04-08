@@ -1,11 +1,12 @@
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #Tensorflow logs all messages except INFO and WARNING to clear unnecessary clutter from the console
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #Logs all messages except INFO and WARNING because THEY DONT MATTER >:)
 
-import pandas as pd #Imported to read Dataset CSV File using variables {zip_file_path} and {csv_file_path}
+import pandas as pd #Read Dataset CSV File; Variables {zip_file_path} and {csv_file_path}
 from sklearn.model_selection import train_test_split
 import zipfile
 import numpy as np
 import string
+import pickle
 
 #pip install nltk @gigacomputer
 import nltk
@@ -14,10 +15,10 @@ from nltk.stem import WordNetLemmatizer
 
 #All TensorFlow imports
 import tensorflow as tf
-from tensorflow import keras #Keras is a high-level API for TensorFlow that helps us build and train deep learning models
+from tensorflow import keras #Keras API for TF
 from tensorflow.keras import layers
 from tensorflow.keras.layers import Dense, Embedding, GlobalAveragePooling1D, Dropout, LSTM
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, Model
 #from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -60,6 +61,10 @@ train_text, test_text, train_label, test_label = train_test_split(texts, labels,
 vocab_size = 75000
 tokenizer = Tokenizer(num_words=vocab_size, lower=True, oov_token='8==D')
 tokenizer.fit_on_texts(train_text)
+
+#Save tokenizer
+with open('tokenizer.pickle', 'wb') as handle:
+    pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 #String sequences into tokenized lists
 train_sequences = tokenizer.texts_to_sequences(train_text)
@@ -107,7 +112,7 @@ sentiment_analysis_model.fit(train_sequences_padded, train_label, epochs=3,
                              batch_size=512, validation_data=(test_sequences_padded, test_label))
 
 #Save model
-#sentiment_analysis_model.save('/mnt/c/Users/garok/Downloads/sentiment_analysis_model')
+sentiment_analysis_model.save('sentiment_analysis_ML')
 
 #Accuracy check
 loss, accuracy = sentiment_analysis_model.evaluate(test_sequences_padded, test_label)
