@@ -19,7 +19,7 @@ from tensorflow import keras #Keras API for TF
 from tensorflow.keras import layers
 from tensorflow.keras.layers import Dense, Embedding, GlobalAveragePooling1D, Dropout, LSTM
 from tensorflow.keras.models import Sequential, Model
-#from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 

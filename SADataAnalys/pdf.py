@@ -1,17 +1,22 @@
-import os
 from fpdf import FPDF 
 
-def create_pdf():
-    pdf = FPDF()
+def create_pdf(content='test', name='Andrew'):
+    pdf = FPDF(format='letter', orientation='portrait', unit='mm')
+
+    pdf.add_font('DejaVu', '', 'DejaVuSansCondensed.ttf')
 
     pdf.add_page()
-    pdf.set_margins(2.54, 2.54)
-    pdf.set_font(family='courier', style='bu', size=24)
-    pdf.cell(w=0, h=10, txt='AHHHH', border=0, ln=1, align='c', fill=False, link='')
-    pdf.set_font(family='arial', style='', size=9)
-    pdf.cell(w=0, h=10, txt='THIS IS A BIGGER AND BETTER TEST LOOOOL', border=0, ln=1, align='r', fill=False, link='')
+    pdf.set_left_margin(25.4)
+    pdf.set_right_margin(25.4)
 
-    pdf.output(dest='f', name='test.pdf')
+    pdf.set_font(family='courier', style='bu', size=24)
+    pdf.cell(w=0, h=10, text=f'GETTING TO KNOW {name}', border=0, align='C', fill=False, link='')
+    pdf.set_xy(pdf.l_margin, pdf.get_y() + 10)
+    pdf.set_font(family='DejaVu', style='', size=9)
+    pdf.ln(h=5)
+    pdf.multi_cell(w=0, h=3, text=content, border=0, align='L')
+
+    pdf.output(name='testpdf.pdf')
 
 
 def main():

@@ -7,8 +7,9 @@ from dotenv import load_dotenv #pip install python-dotenv @gigaComputer
 load_dotenv() #.env contains OPENAI_API_KEY variable (check Discord)
 
 #File import
-import analysis
-from queries import query, role
+from analysis import sentimentAnalysis
+from queries import query, role, next_query
+from pdf import create_pdf
 
 def main():
     jotformAPIClient = JotformAPIClient('0698fe80cbad87f1efa0d63ba86a63e5')
@@ -43,7 +44,7 @@ def main():
     print(negative_sentences)
     print(undetermined_sentences)
 
-    pos, neg = analysis.sentimentAnalysis(undetermined_sentences)
+    pos, neg = sentimentAnalysis(undetermined_sentences)
 
     print(f'Positive: {pos}')
     print(f'Negative: {neg}')
@@ -59,10 +60,11 @@ def main():
     }
 
     behaviors = [
-        {'role': 'user', 'content': query}
-        #{'role' : 'user', 'content' : f'Positive behaviors: {positive_sentences}'}
-        #{'role' : 'user', 'content' : f'Negative behaviors: {negative_sentences}'}
-        #{'role' : 'user', 'content' : f'Background information: {background_information}'}
+        {'role': 'user', 'content': query},
+        {'role' : 'user', 'content' : f'Positive behaviors: {positive_sentences}'},
+        {'role' : 'user', 'content' : f'Negative behaviors: {negative_sentences}'},
+        {'role' : 'user', 'content' : f'Background information: Andrew is 8 years old and AMBIBEXTROUS'},
+        {'role' : 'user', 'content' : next_query}
     ]
 
     completion = client.chat.completions.create(
@@ -70,9 +72,11 @@ def main():
         messages = [system_message] + behaviors
     )
     
-    print(completion.choices[0].message.content)
-    
-    return completion.choices[0].message.content
+    #print(completion.choices[0].message.content)
+
+    create_pdf(completion.choices[0].message.content)
+
+
 
 
 if __name__ == '__main__':
