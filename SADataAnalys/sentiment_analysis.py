@@ -1,7 +1,7 @@
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #Tensorflow logs all messages except INFO and WARNING to clear unnecessary clutter from the console
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #Deletes all messages except INFO and WARNING because NO ONE CARES
 
-import pandas as pd #Imported to read Dataset CSV File using variables {zip_file_path} and {csv_file_path}
+import pandas as pd #Read dataset csv; use variables {zip_file_path} and {csv_file_path}
 from sklearn.model_selection import train_test_split
 import zipfile
 import numpy as np
@@ -12,9 +12,9 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
-#All TensorFlow imports
+#TensorFlow imports
 import tensorflow as tf
-from tensorflow import keras #Keras is a high-level API for TensorFlow that helps us build and train deep learning models
+from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.layers import Dense, Embedding, GlobalAveragePooling1D, Dropout, LSTM
 from tensorflow.keras.models import Sequential
